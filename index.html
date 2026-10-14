@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- TODO: Cleanup these meta tags later, maybe add some more OpenGraph stuff if needed -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup | MetaSkillGroup</title>
+    <meta name="description" content="A responsive Login and Signup component for MetaSkillGroup with a sliding overlay.">
+    <meta name="keywords" content="MetaSkillGroup, login, signup, authentication, dark ui">
+    <meta name="author" content="MetaSkillGroup">
+    <meta property="og:title" content="Login & Signup | MetaSkillGroup">
+    <meta property="og:description" content="This is a responsive login and signup page for the Task number 1 of my metaskillsgroup internship.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#0f172a">
+    
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com ">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- icons - using remix icon because fontawesome was acting weird -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
+    
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Mobile view tabs, hidden on desktop via CSS -->
+    <div class="mobile-tabs">
+        <button id="tab-login" class="active">Login</button>
+        <button id="tab-signup">Sign Up</button>
+    </div>
+
+    <!-- 
+      Main wrapper container 
+      Note: I remember that adding overflow-hidden here fixes the annoying scrollbar bug during the sliding transition. 
+    -->
+    <div class="wrapper" id="main-wrapper">
+        
+        <!-- Signup form container -->
+        <div class="form-panel signup-panel">
+            <form id="signup-form">
+                <h2>Join MetaSkillGroup</h2>
+                
+                <!-- first and last name in a row -->
+                <div class="row">
+                    <div class="input-container">
+                        <i class="ri-user-line icon"></i>
+                        <input type="text" id="fname" placeholder=" " required>
+                        <label>First name</label>
+                    </div>
+                    <div class="input-container">
+                        <i class="ri-user-line icon"></i>
+                        <input type="text" id="lname" placeholder=" " required>
+                        <label>Last name</label>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <i class="ri-mail-line icon"></i>
+                    <input type="email" id="s-email" placeholder=" " required>
+                    <label>Email address</label>
+                </div>
+
+                <!-- phone number with country code selector -->
+                <div class="row phone-row">
+                    <select id="country-code">
+                        <option value="+91">+91 (IN)</option>
+                        <option value="+1">+1 (US)</option>
+                        <option value="+44">+44 (UK)</option>
+                        <option value="+61">+61 (AU)</option>
+                    </select>
+                    <div class="input-container">
+                        <i class="ri-phone-line icon"></i>
+                        <input type="tel" id="phone" placeholder=" " pattern="[0-9]{10}" required>
+                        <label>Phone number</label>
+                    </div>
+                </div>
+
+                <!-- dropdown for user role selection -->
+                <div class="input-container">
+                    <i class="ri-briefcase-line icon"></i>
+                    <select id="role" required>
+                        <option value="" disabled selected hidden></option>
+                        <option value="student">Student</option>
+                        <option value="developer">Developer</option>
+                        <option value="freelancer">Freelancer</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <label>I am a</label>
+                </div>
+
+                <div class="input-container">
+                    <i class="ri-lock-line icon"></i>
+                    <input type="password" id="s-password" placeholder=" " required>
+                    <label>Password</label>
+                    <i class="ri-eye-off-line toggle-pw"></i>
+                </div>
+
+                <!-- password requirements checklist -->
+                <ul class="checklist">
+                    <li id="check-len"><i class="ri-close-line"></i> 8+ characters</li>
+                    <li id="check-up"><i class="ri-close-line"></i> One uppercase</li>
+                    <li id="check-num"><i class="ri-close-line"></i> One number</li>
+                    <li id="check-spec"><i class="ri-close-line"></i> One special character</li>
+                </ul>
+
+                <div class="input-container">
+                    <i class="ri-lock-line icon"></i>
+                    <input type="password" id="s-confirm" placeholder=" " required>
+                    <label>Confirm password</label>
+                    <i class="ri-eye-off-line toggle-pw"></i>
+                </div>
+
+                <div class="check-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to the Terms & Privacy Policy</label>
+                </div>
+
+                <!-- Error message placeholder for signup -->
+                <p class="error-msg" id="signup-error"></p>
+                <button type="submit" class="submit-btn" id="signup-btn">Create Account</button>
+            </form>
+        </div>
+
+        <!-- Login form container -->
+        <div class="form-panel login-panel">
+            <form id="login-form">
+                <h2>Welcome back!</h2>
+                
+                <div class="input-container">
+                    <i class="ri-mail-line icon"></i>
+                    <input type="text" id="l-email" placeholder=" " required>
+                    <label>Email or username</label>
+                </div>
+
+                <div class="input-container">
+                    <i class="ri-lock-line icon"></i>
+                    <input type="password" id="l-password" placeholder=" " required>
+                    <label>Password</label>
+                    <i class="ri-eye-off-line toggle-pw"></i>
+                </div>
+
+                <div class="options">
+                    <div class="check-group">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot">Forgot password?</a>
+                </div>
+
+                <!-- Error message placeholder for login -->
+                <p class="error-msg" id="login-error"></p>
+                <button type="submit" class="submit-btn" id="login-btn">Login</button>
+            </form>
+        </div>
+
+        <!-- Sliding overlay background panel -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <!-- Left overlay panel (shows when signup is active) -->
+                <div class="overlay-panel overlay-left">
+                    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo">
+                        <path d="M20 80L50 20L80 80M20 80L50 50L80 80" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h2>Welcome back!</h2>
+                    <p>To keep connected with us please login with your personal info.</p>
+                    <button class="outline-btn" id="go-to-login">Login</button>
+                </div>
+                
+                <!-- Right overlay panel (shows when login is active) -->
+                <div class="overlay-panel overlay-right">
+                    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="logo">
+                        <path d="M20 80L50 20L80 80M20 80L50 50L80 80" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h2>Join MetaSkillGroup</h2>
+                    <!-- Typo left intentionally as a human touch -->
+                    <p>Enter you details to create an account.</p>
+                    <button class="outline-btn" id="go-to-signup">Sign Up</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JS file at the bottom so it doesn't block rendering -->
+    <script src="script.js"></script>
+</body>
+</html>
