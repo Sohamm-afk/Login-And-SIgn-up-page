@@ -50,7 +50,7 @@ project-folder/
 
 ## Live Demo
 
-Add your deployed Netlify URL here once deployment is complete.
+https://login-signup-met.netlify.app/
 
 ## Author
 
