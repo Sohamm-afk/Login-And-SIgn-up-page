@@ -1,239 +1,398 @@
 
-const wrapper = document.getElementById('main-wrapper');
-const btnGoSignup = document.getElementById('go-to-signup');
-const btnGoLogin = document.getElementById('go-to-login');
+:root {
+    --bg-dark: #0f172a;
+    --card-bg: #1e293b;
+    --input-bg: #334155;
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+    --primary: #0ea5e9;
+    --error: #ef4444;
+    --success: #22c55e;
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
 
-// Switch to the signup form
-btnGoSignup.addEventListener('click', () => {
-    wrapper.classList.add('right-active');
-});
+/* Reset the default spacing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-// Switch back to the login form
-btnGoLogin.addEventListener('click', () => {
-    wrapper.classList.remove('right-active');
-});
+body {
+    font-family: var(--font-body);
+    background: var(--bg-dark);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
 
-const tabLogin = document.getElementById('tab-login');
-const tabSignup = document.getElementById('tab-signup');
-const loginPanel = document.querySelector('.login-panel');
-const signupPanel = document.querySelector('.signup-panel');
+h2 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
-// Show the form selected in the mobile tabs
-function updateMobileView(isLogin) {
-    if (isLogin) {
-        tabLogin.classList.add('active');
-        tabSignup.classList.remove('active');
+/* Main card that holds both forms */
+.wrapper {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    width: 900px;
+    max-width: 100%;
+    min-height: 620px;
+}
 
-        loginPanel.classList.add('active-mobile');
-        signupPanel.classList.remove('active-mobile');
-    } else {
-        tabSignup.classList.add('active');
-        tabLogin.classList.remove('active');
+/* Both forms share the same basic layout */
+.form-panel {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+}
 
-        signupPanel.classList.add('active-mobile');
-        loginPanel.classList.remove('active-mobile');
+/* Login form stays on the left by default */
+.login-panel {
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+
+.signup-panel {
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+
+/* Move the forms when switching to signup */
+.wrapper.right-active .login-panel {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.wrapper.right-active .signup-panel {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Keep the icons inside their input fields */
+.input-container .icon {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: var(--text-dim);
+}
+
+.input-container .toggle-pw {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: var(--text-dim);
+    cursor: pointer;
+}
+
+.input-container input,
+.input-container select {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--input-bg);
+    border-radius: 8px;
+    padding: 15px 40px;
+    color: var(--text-main);
+    font-family: var(--font-body);
+    outline: none;
+    transition: 0.3s;
+}
+
+/* Labels move up when the field is active or filled */
+.input-container label {
+    position: absolute;
+    left: 40px;
+    top: 15px;
+    color: var(--text-dim);
+    pointer-events: none;
+    transition: 0.2s ease all;
+}
+
+.input-container input:focus,
+.input-container select:focus {
+    border-color: var(--primary);
+}
+
+.input-container input:focus ~ label,
+.input-container input:not(:placeholder-shown) ~ label,
+.input-container select:focus ~ label,
+.input-container select:valid ~ label {
+    top: -8px;
+    left: 15px;
+    font-size: 12px;
+    background: var(--card-bg);
+    padding: 0 5px;
+    color: var(--primary);
+}
+
+/* Show a different border depending on the field status */
+.input-container.error input {
+    border-color: var(--error);
+}
+
+.input-container.success input {
+    border-color: var(--success);
+}
+
+/* Leave room for the country code */
+.phone-row select {
+    width: 100px;
+    padding: 15px 5px;
+}
+
+/* Password rules are shown in two columns */
+.checklist {
+    list-style: none;
+    font-size: 12px;
+    color: var(--text-dim);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: -10px;
+    padding-left: 5px;
+}
+
+.checklist li.valid {
+    color: var(--success);
+}
+
+.check-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-dim);
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forgot {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+/* Main button used to submit either form */
+.submit-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 16px;
+    font-family: var(--font-heading);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    background: #0284c7;
+}
+
+.error-msg {
+    color: var(--error);
+    font-size: 13px;
+    text-align: center;
+    margin-top: -5px;
+    min-height: 15px;
+}
+
+/* Sliding panel on the right side */
+.overlay-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.6s ease-in-out;
+    z-index: 100;
+}
+
+.wrapper.right-active .overlay-container {
+    transform: translateX(-100%);
+}
+
+.overlay {
+    background: linear-gradient(135deg, #4f46e5, #0ea5e9);
+    color: #fff;
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.wrapper.right-active .overlay {
+    transform: translateX(50%);
+}
+
+/* Text and buttons inside the overlay */
+.overlay-panel {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 40px;
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.logo {
+    margin-bottom: 20px;
+}
+
+.overlay-left {
+    transform: translateX(-20%);
+}
+
+.wrapper.right-active .overlay-left {
+    transform: translateX(0);
+}
+
+.overlay-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.wrapper.right-active .overlay-right {
+    transform: translateX(20%);
+}
+
+.outline-btn {
+    background: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-family: var(--font-heading);
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+/* These tabs are only needed on smaller screens */
+.mobile-tabs {
+    display: none;
+    width: 100%;
+    max-width: 400px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 5px;
+    gap: 5px;
+}
+
+.mobile-tabs button {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-family: var(--font-heading);
+    border-radius: 6px;
+}
+
+.mobile-tabs button.active {
+    background: var(--input-bg);
+    color: #fff;
+}
+
+/* Switch to a single-form layout on mobile */
+@media (max-width: 768px) {
+    .mobile-tabs {
+        display: flex;
+    }
+
+    .wrapper {
+        width: 100%;
+        max-width: 400px;
+        min-height: auto;
+    }
+
+    .overlay-container {
+        display: none;
+    }
+
+    .form-panel {
+        width: 100%;
+        position: relative;
+        padding: 30px 20px;
+        display: none;
+        opacity: 1;
+        transform: none !important;
+    }
+
+    .form-panel.active-mobile {
+        display: flex;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .phone-row {
+        flex-direction: row;
+    }
+
+    .checklist {
+        grid-template-columns: 1fr;
     }
 }
 
-// Show login first when the page opens on mobile
-if (window.innerWidth <= 768) {
-    updateMobileView(true);
+/* Make everything fit on very narrow screens */
+@media (max-width: 360px) {
+    .form-panel {
+        padding: 20px 15px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
 }
-
-tabLogin.addEventListener('click', () => updateMobileView(true));
-tabSignup.addEventListener('click', () => updateMobileView(false));
-
-
-// Show or hide the password when the eye icon is clicked
-const toggleIcons = document.querySelectorAll('.toggle-pw');
-
-toggleIcons.forEach(icon => {
-    icon.addEventListener('click', () => {
-        const input = icon.previousElementSibling.previousElementSibling;
-
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('ri-eye-off-line');
-            icon.classList.add('ri-eye-line');
-        } else {
-            input.type = 'password';
-            icon.classList.remove('ri-eye-line');
-            icon.classList.add('ri-eye-off-line');
-        }
-    });
-});
-
-
-const signupPw = document.getElementById('s-password');
-const checkLen = document.getElementById('check-len');
-const checkUp = document.getElementById('check-up');
-const checkNum = document.getElementById('check-num');
-const checkSpec = document.getElementById('check-spec');
-
-let isValidPassword = false;
-
-// Check the password rules as the user types
-signupPw.addEventListener('input', () => {
-    const val = signupPw.value;
-    isValidPassword = true;
-
-    // Password should have at least 8 characters
-    if (val.length >= 8) {
-        checkLen.classList.add('valid');
-        checkLen.innerHTML = '<i class="ri-check-line"></i> 8+ characters';
-    } else {
-        checkLen.classList.remove('valid');
-        checkLen.innerHTML = '<i class="ri-close-line"></i> 8+ characters';
-        isValidPassword = false;
-    }
-
-    // Check for an uppercase letter
-    if (/[A-Z]/.test(val)) {
-        checkUp.classList.add('valid');
-        checkUp.innerHTML = '<i class="ri-check-line"></i> One uppercase';
-    } else {
-        checkUp.classList.remove('valid');
-        checkUp.innerHTML = '<i class="ri-close-line"></i> One uppercase';
-        isValidPassword = false;
-    }
-
-    // Check for at least one number
-    if (/[0-9]/.test(val)) {
-        checkNum.classList.add('valid');
-        checkNum.innerHTML = '<i class="ri-check-line"></i> One number';
-    } else {
-        checkNum.classList.remove('valid');
-        checkNum.innerHTML = '<i class="ri-close-line"></i> One number';
-        isValidPassword = false;
-    }
-
-    // Check for a special character
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(val)) {
-        checkSpec.classList.add('valid');
-        checkSpec.innerHTML = '<i class="ri-check-line"></i> One special character';
-    } else {
-        checkSpec.classList.remove('valid');
-        checkSpec.innerHTML = '<i class="ri-close-line"></i> One special character';
-        isValidPassword = false;
-    }
-});
-
-
-const signupForm = document.getElementById('signup-form');
-const loginForm = document.getElementById('login-form');
-
-
-// Handle account creation
-signupForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const errorMsg = document.getElementById('signup-error');
-    const btn = document.getElementById('signup-btn');
-    const confirmPw = document.getElementById('s-confirm');
-
-    const email = document.getElementById('s-email').value;
-    const password = signupPw.value;
-
-    errorMsg.textContent = '';
-
-    // Don't continue if the password rules aren't met
-    if (!isValidPassword) {
-        errorMsg.textContent = 'Please meet all password requirements.';
-        return;
-    }
-
-    // Make sure both password fields match
-    if (password !== confirmPw.value) {
-        errorMsg.textContent = 'Passwords do not match.';
-        return;
-    }
-
-    // Show a loading message while processing
-    btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Processing...';
-    btn.disabled = true;
-
-    setTimeout(() => {
-        let users = JSON.parse(localStorage.getItem('metaskill_users')) || [];
-
-        // Check if this email is already registered
-        const userExists = users.find(u => u.email === email);
-
-        if (userExists) {
-            errorMsg.textContent = 'An account with this email already exists.';
-            btn.innerHTML = 'Create Account';
-            btn.disabled = false;
-            return;
-        }
-
-        // Save the new account in local storage
-        users.push({ email: email, password: password });
-        localStorage.setItem('metaskill_users', JSON.stringify(users));
-
-        btn.innerHTML = 'Account created!';
-        btn.style.background = '#22c55e';
-
-        // Reset the form after showing the success message
-        setTimeout(() => {
-            signupForm.reset();
-            btn.innerHTML = 'Create Account';
-            btn.style.background = '';
-            btn.disabled = false;
-
-            wrapper.classList.remove('right-active');
-
-            if (window.innerWidth <= 768) {
-                updateMobileView(true);
-            }
-        }, 2000);
-    }, 1500);
-});
-
-
-// Handle login
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const btn = document.getElementById('login-btn');
-    const errorMsg = document.getElementById('login-error');
-
-    const email = document.getElementById('l-email').value;
-    const password = document.getElementById('l-password').value;
-
-    errorMsg.textContent = '';
-
-    btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Checking...';
-    btn.disabled = true;
-
-    // Give the login check a short delay
-    setTimeout(() => {
-        let users = JSON.parse(localStorage.getItem('metaskill_users')) || [];
-
-        // Look for a matching email and password
-        const validUser = users.find(
-            u => u.email === email && u.password === password
-        );
-
-        // Allow the demo account to log in too
-        const isDemo = (
-            email === 'demo@metaskill.com' &&
-            password === 'Password123!'
-        );
-
-        if (validUser || isDemo) {
-            btn.innerHTML = 'Welcome back!';
-            btn.style.background = '#22c55e';
-
-            setTimeout(() => {
-                loginForm.reset();
-                btn.innerHTML = 'Login';
-                btn.style.background = '';
-                btn.disabled = false;
-            }, 2000);
-        } else {
-            // Show an error if the details don't match
-            btn.innerHTML = 'Login';
-            btn.disabled = false;
-            errorMsg.textContent = 'Incorrect email or password. Please try again.';
-        }
-    }, 1500);
-});
